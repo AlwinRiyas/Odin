@@ -33,7 +33,11 @@ def _with_quote(url: str) -> str:
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
 
 
-def check_sql_errors(url: str, config: ScanConfig | None = None, policy: ActiveScanPolicy | None = None) -> list[Finding]:
+def check_sql_errors(
+    url: str,
+    config: ScanConfig | None = None,
+    policy: ActiveScanPolicy | None = None,
+) -> list[Finding]:
     """Check for obvious database error disclosure after one benign perturbation."""
     config = config or ScanConfig()
     policy = policy or ActiveScanPolicy()
@@ -62,11 +66,17 @@ def check_sql_errors(url: str, config: ScanConfig | None = None, policy: ActiveS
             title="Database error indicator exposed after input perturbation",
             severity="medium",
             category="sqli",
-            description="A database error indicator appeared after a single benign input perturbation. This is an indicator, not proof of SQL injection.",
+            description=(
+                "A database error indicator appeared after a single benign input "
+                "perturbation. This is an indicator, not proof of SQL injection."
+            ),
             target=url,
             confidence="low",
             evidence=f"Matched indicators: {', '.join(matches)}",
-            remediation="Use parameterized queries and avoid exposing database error details to clients.",
+            remediation=(
+                "Use parameterized queries and avoid exposing database error details "
+                "to clients."
+            ),
             scanner="active_sqli",
         )
     ]
