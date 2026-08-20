@@ -20,8 +20,12 @@ def scan(
     modules: str | None = typer.Option(None, help="Comma-separated scanner modules."),
     output: str = typer.Option("terminal", help="Output format: terminal or json."),
     timeout: float = typer.Option(10.0, min=1.0, help="HTTP timeout in seconds."),
+    fail_on: str | None = typer.Option(
+        None,
+        help="Exit non-zero when risk rating is at or above: low, medium, high, critical.",
+    ),
 ) -> None:
-    """Run passive security checks against a target."""
+    """Run security checks against a target."""
     selected_modules = [item.strip() for item in modules.split(",") if item.strip()] if modules else None
     config = ScanConfig(timeout=timeout)
 
@@ -36,6 +40,15 @@ def scan(
         render(result)
     else:
         raise typer.BadParameter("Output must be 'terminal' or 'json'.")
+
+    if fail_on:
+        thresholds = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+        ratings = {"info": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}
+        threshold = thresholds.get(fail_on.lower())
+        if threshold is None:
+            raise typer.BadParameter("fail-on must be low, medium, high, or critical")
+        if ratings[result.risk.rating] >= threshold:
+            raise typer.Exit(code=2)
 
 
 @app.command()
