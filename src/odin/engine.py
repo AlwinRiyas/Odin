@@ -9,8 +9,11 @@ from odin.models import Finding
 from odin.scanners.basic import check_status
 from odin.scanners.cookies import check_cookies
 from odin.scanners.cors import check_cors
+from odin.scanners.disclosure import check_disclosure
 from odin.scanners.headers import check_headers
 from odin.scanners.http import check_http
+from odin.scanners.methods import check_methods
+from odin.scanners.tls import check_tls
 
 Scanner = Callable[[str, ScanConfig], list[Finding]]
 
@@ -50,12 +53,15 @@ SCANNERS: dict[str, Scanner] = {
     "headers": check_headers,
     "cookies": check_cookies,
     "cors": check_cors,
+    "tls": check_tls,
+    "methods": check_methods,
+    "disclosure": check_disclosure,
 }
 
 PROFILES: dict[str, list[str]] = {
     "quick": ["http", "headers"],
-    "baseline": ["http", "headers", "cookies", "cors"],
-    "full": ["http", "headers", "cookies", "cors"],
+    "baseline": ["http", "headers", "cookies", "cors", "disclosure"],
+    "full": ["http", "headers", "cookies", "cors", "tls", "methods", "disclosure"],
 }
 
 
