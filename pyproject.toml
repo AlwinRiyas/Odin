@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "odin-security"
+version = "0.9.0"
+description = "A modular Python security-scanning CLI for authorized defensive security assessment."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Alwin Riyas P" }]
+keywords = ["security", "scanner", "cybersecurity", "cli", "web-security"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+    "requests>=2.31,<3",
+    "typer>=0.12,<1",
+    "rich>=13.7,<15",
+]
+
+[project.urls]
+Homepage = "https://github.com/AlwinRiyas/Odin"
+Repository = "https://github.com/AlwinRiyas/Odin"
+Issues = "https://github.com/AlwinRiyas/Odin/issues"
+
+[project.scripts]
+odin = "odin.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/odin"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["odin"]
