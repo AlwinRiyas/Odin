@@ -1,6 +1,4 @@
-from unittest.mock import Mock, patch
-
-import requests
+from unittest.mock import patch
 
 from odin.config import ScanConfig
 from odin.scanners.tls import check_tls
