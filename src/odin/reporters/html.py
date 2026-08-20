@@ -21,6 +21,11 @@ def render_html(result: ScanResult) -> str:
         )
 
     body = "".join(rows) or '<tr><td colspan="6">No findings detected.</td></tr>'
+    risk = (
+        f'<div class="metric"><strong>Risk</strong><br><span class="score">'
+        f"{result.risk.score:.2f}/10</span> "
+        f"({escape(result.risk.rating.upper())})</div>"
+    )
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -44,7 +49,7 @@ code {{ word-break: break-word; }}
 <div class="metric"><strong>Target</strong><br><code>{escape(result.target)}</code></div>
 <div class="metric"><strong>HTTP</strong><br>{result.status}</div>
 <div class="metric"><strong>Findings</strong><br>{result.finding_count}</div>
-<div class="metric"><strong>Risk</strong><br><span class="score">{result.risk.score:.2f}/10</span> ({escape(result.risk.rating.upper())})</div>
+{risk}
 </header>
 <h2>Severity Summary</h2>
 <ul>
