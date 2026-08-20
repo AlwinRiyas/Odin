@@ -22,12 +22,20 @@ app = typer.Typer(help="Modular web security scanning CLI.", no_args_is_help=Tru
 def scan(
     url: str = typer.Argument(..., help="Target URL to scan."),
     profile: str | None = typer.Option(None, help="Scan profile (overrides config)."),
-    modules: str | None = typer.Option(None, help="Comma-separated modules (overrides config)."),
+    modules: str | None = typer.Option(
+        None, help="Comma-separated modules (overrides config)."
+    ),
     output: str | None = typer.Option(None, help="Output format (overrides config)."),
-    output_file: Path | None = typer.Option(None, help="Write report to a file."),
+    output_file: Path | None = typer.Option(  # noqa: B008
+        None, help="Write report to a file."
+    ),
     timeout: float | None = typer.Option(None, min=1.0, help="HTTP timeout in seconds."),
     fail_on: str | None = typer.Option(None, help="Risk threshold (overrides config)."),
-    config_file: Path | None = typer.Option(None, "--config", help="Project configuration JSON file."),
+    config_file: Path | None = typer.Option(  # noqa: B008
+        None,
+        "--config",
+        help="Project configuration JSON file.",
+    ),
 ) -> None:
     """Run security checks against a target."""
     try:
