@@ -20,6 +20,7 @@ from odin.scanners.methods import check_methods
 from odin.scanners.tls import check_tls
 
 Scanner = Callable[[str, ScanConfig], list[Finding]]
+ACTIVE_MODULES = {"active_xss", "active_sqli"}
 
 
 @dataclass(slots=True)
@@ -88,13 +89,16 @@ def run_scan(
         raise ValueError(f"Unknown profile: {profile}")
 
     selected = modules if modules is not None else PROFILES[profile]
-    active_modules = {"active_xss", "active_sqli"}
-    if active_modules.intersection(selected):
-        policy = active_policy or ActiveScanPolicy()
+    policy = active_policy or ActiveScanPolicy()
+    selected_active = set(selected).intersection(ACTIVE_MODULES)
+    if selected_active:
         if not policy.enabled:
             raise ValueError("Active modules require an explicitly enabled active-scan policy")
-    else:
-        policy = active_policy or ActiveScanPolicy()
+        if len(selected_active) > policy.max_requests:
+            raise ValueError(
+                f"Active scan request budget exceeded: {len(selected_active)} modules requested, "
+                f"budget is {policy.max_requests}"
+            )
 
     registry: dict[str, Callable[..., list[Finding]]] = {
         **SCANNERS,
