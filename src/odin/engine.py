@@ -3,9 +3,12 @@
 from dataclasses import dataclass
 from typing import Callable
 
+from odin.active import ActiveScanPolicy
 from odin.config import ScanConfig
 from odin.findings import normalize_findings
 from odin.models import Finding
+from odin.scanners.active_sqli import check_sql_errors
+from odin.scanners.active_xss import check_reflection
 from odin.scanners.basic import check_status
 from odin.scanners.cookies import check_cookies
 from odin.scanners.cors import check_cors
@@ -37,7 +40,6 @@ class ScanResult:
         return counts
 
     def to_dict(self) -> dict[str, object]:
-        """Serialize the complete scan result."""
         return {
             "target": self.target,
             "status": self.status,
@@ -78,21 +80,35 @@ def run_scan(
     config: ScanConfig | None = None,
     profile: str = "baseline",
     modules: list[str] | None = None,
+    active_policy: ActiveScanPolicy | None = None,
 ) -> ScanResult:
-    """Run selected scanner modules against a target."""
+    """Run passive modules, with active checks available only by explicit module selection."""
     config = config or ScanConfig()
     if profile not in PROFILES:
         raise ValueError(f"Unknown profile: {profile}")
 
     selected = modules if modules is not None else PROFILES[profile]
-    unknown = sorted(set(selected) - set(SCANNERS))
+    active_modules = {"active_xss", "active_sqli"}
+    if active_modules.intersection(selected):
+        policy = active_policy or ActiveScanPolicy()
+        if not policy.enabled:
+            raise ValueError("Active modules require an explicitly enabled active-scan policy")
+    else:
+        policy = active_policy or ActiveScanPolicy()
+
+    registry: dict[str, Callable[..., list[Finding]]] = {
+        **SCANNERS,
+        "active_xss": lambda target, cfg: check_reflection(target, cfg, policy),
+        "active_sqli": lambda target, cfg: check_sql_errors(target, cfg, policy),
+    }
+    unknown = sorted(set(selected) - set(registry))
     if unknown:
         raise ValueError(f"Unknown scanner module(s): {', '.join(unknown)}")
 
     basic = check_status(target, config)
     findings: list[Finding] = []
     for name in selected:
-        findings.extend(SCANNERS[name](target, config))
+        findings.extend(registry[name](target, config))
 
     return ScanResult(
         target=target,
