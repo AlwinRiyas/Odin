@@ -21,7 +21,7 @@ def scan(
     output: str = typer.Option("terminal", help="Output format: terminal or json."),
     timeout: float = typer.Option(10.0, min=1.0, help="HTTP timeout in seconds."),
 ) -> None:
-    """Run security checks against a target."""
+    """Run passive security checks against a target."""
     selected_modules = [item.strip() for item in modules.split(",") if item.strip()] if modules else None
     config = ScanConfig(timeout=timeout)
 
