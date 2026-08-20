@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Callable
 
 from odin.config import ScanConfig
+from odin.findings import normalize_findings
 from odin.models import Finding
 from odin.scanners.basic import check_status
 from odin.scanners.headers import check_headers
@@ -17,6 +18,20 @@ class ScanResult:
     status: int | None
     final_url: str | None
     findings: list[Finding]
+
+    @property
+    def finding_count(self) -> int:
+        return len(self.findings)
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize the complete scan result."""
+        return {
+            "target": self.target,
+            "status": self.status,
+            "final_url": self.final_url,
+            "finding_count": self.finding_count,
+            "findings": [finding.to_dict() for finding in self.findings],
+        }
 
 
 SCANNERS: dict[str, Scanner] = {
@@ -63,5 +78,5 @@ def run_scan(
         target=target,
         status=int(basic["status"]),
         final_url=str(basic["final_url"]),
-        findings=findings,
+        findings=normalize_findings(findings),
     )
