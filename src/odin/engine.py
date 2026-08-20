@@ -7,7 +7,10 @@ from odin.config import ScanConfig
 from odin.findings import normalize_findings
 from odin.models import Finding
 from odin.scanners.basic import check_status
+from odin.scanners.cookies import check_cookies
+from odin.scanners.cors import check_cors
 from odin.scanners.headers import check_headers
+from odin.scanners.http import check_http
 
 Scanner = Callable[[str, ScanConfig], list[Finding]]
 
@@ -43,13 +46,16 @@ class ScanResult:
 
 
 SCANNERS: dict[str, Scanner] = {
+    "http": check_http,
     "headers": check_headers,
+    "cookies": check_cookies,
+    "cors": check_cors,
 }
 
 PROFILES: dict[str, list[str]] = {
-    "quick": ["headers"],
-    "baseline": ["headers"],
-    "full": ["headers"],
+    "quick": ["http", "headers"],
+    "baseline": ["http", "headers", "cookies", "cors"],
+    "full": ["http", "headers", "cookies", "cors"],
 }
 
 
