@@ -7,6 +7,7 @@ from odin.active import ActiveScanPolicy
 from odin.config import ScanConfig
 from odin.findings import normalize_findings
 from odin.models import Finding
+from odin.risk import RiskSummary, calculate_risk
 from odin.scanners.active_sqli import check_sql_errors
 from odin.scanners.active_xss import check_reflection
 from odin.scanners.basic import check_status
@@ -27,6 +28,7 @@ class ScanResult:
     status: int | None
     final_url: str | None
     findings: list[Finding]
+    risk: RiskSummary
 
     @property
     def finding_count(self) -> int:
@@ -34,10 +36,7 @@ class ScanResult:
 
     @property
     def severity_counts(self) -> dict[str, int]:
-        counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0}
-        for finding in self.findings:
-            counts[finding.severity] += 1
-        return counts
+        return self.risk.severity_counts
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -46,6 +45,7 @@ class ScanResult:
             "final_url": self.final_url,
             "finding_count": self.finding_count,
             "severity_counts": self.severity_counts,
+            "risk": self.risk.to_dict(),
             "findings": [finding.to_dict() for finding in self.findings],
         }
 
@@ -110,9 +110,11 @@ def run_scan(
     for name in selected:
         findings.extend(registry[name](target, config))
 
+    normalized = normalize_findings(findings)
     return ScanResult(
         target=target,
         status=int(basic["status"]),
         final_url=str(basic["final_url"]),
-        findings=normalize_findings(findings),
+        findings=normalized,
+        risk=calculate_risk(normalized),
     )
