@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "odin-security"
+version = "0.2.0"
+description = "A modular Python web security scanning CLI."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Alwin Riyas P" }]
+dependencies = [
+    "requests>=2.31,<3",
+    "typer>=0.12,<1",
+    "rich>=13.7,<15",
+]
+
+[project.scripts]
+odin = "odin.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/odin"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
