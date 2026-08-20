@@ -4,7 +4,6 @@ import json
 
 from odin.engine import ScanResult
 
-
 _LEVELS = {
     "critical": "error",
     "high": "error",

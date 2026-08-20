@@ -5,7 +5,6 @@ import requests
 from odin.config import ScanConfig
 from odin.models import Finding
 
-
 DISCLOSURE_HEADERS = {
     "X-Powered-By": ("DISC-001", "low"),
     "X-AspNet-Version": ("DISC-002", "low"),

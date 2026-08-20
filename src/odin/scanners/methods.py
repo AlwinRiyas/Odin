@@ -5,7 +5,6 @@ import requests
 from odin.config import ScanConfig
 from odin.models import Finding
 
-
 METHODS = ("OPTIONS", "TRACE", "PUT", "DELETE", "CONNECT")
 
 

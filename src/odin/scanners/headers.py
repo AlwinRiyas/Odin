@@ -5,7 +5,6 @@ import requests
 from odin.config import ScanConfig
 from odin.models import Finding
 
-
 SECURITY_HEADERS = {
     "Content-Security-Policy": ("HDR-001", "medium"),
     "Strict-Transport-Security": ("HDR-002", "medium"),

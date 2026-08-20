@@ -17,8 +17,16 @@ def test_profile_validation() -> None:
 
 def test_run_scan_uses_baseline_profile() -> None:
     status = {"status": 200, "final_url": "https://example.com/"}
+    scanners = {
+        "http": lambda target, config: [],
+        "headers": lambda target, config: [],
+        "cookies": lambda target, config: [],
+        "cors": lambda target, config: [],
+        "disclosure": lambda target, config: [],
+    }
+
     with patch("odin.engine.check_status", return_value=status), patch(
-        "odin.engine.check_headers", return_value=[]
+        "odin.engine.SCANNERS", scanners
     ):
         result = run_scan("https://example.com", ScanConfig(), profile="baseline")
 

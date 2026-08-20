@@ -8,7 +8,6 @@ from odin.reporters.html import render_html
 from odin.reporters.sarif import serialize as serialize_sarif
 from odin.risk import calculate_risk
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
