@@ -29,3 +29,11 @@ jobs:
         run: python -m build
       - name: Validate distributions
         run: python -m twine check dist/*
+      - name: Wheel smoke test
+        run: |
+          python -m venv .release-venv
+          . .release-venv/bin/activate
+          python -m pip install --upgrade pip
+          python -m pip install dist/*.whl
+          odin version
+          odin --help
