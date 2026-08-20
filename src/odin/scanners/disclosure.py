@@ -33,11 +33,17 @@ def check_disclosure(url: str, config: ScanConfig | None = None) -> list[Finding
                     title=f"{header} discloses implementation information",
                     severity=severity,
                     category="information-disclosure",
-                    description="The response exposes a framework or implementation-identifying header.",
+                    description=(
+                        "The response exposes a framework or implementation-"
+                        "identifying header."
+                    ),
                     target=url,
                     confidence="high",
                     evidence=f"{header}: {value}",
-                    remediation="Remove or minimize unnecessary framework and version disclosure headers.",
+                    remediation=(
+                        "Remove or minimize unnecessary framework and version "
+                        "disclosure headers."
+                    ),
                     scanner="disclosure",
                 )
             )
