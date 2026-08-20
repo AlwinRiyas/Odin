@@ -38,7 +38,9 @@ def check_headers(url: str, config: ScanConfig | None = None) -> list[Finding]:
                     description=f"The response does not include the {header} header.",
                     target=url,
                     confidence="high",
+                    evidence="Header was absent from the HTTP response.",
                     remediation=f"Configure an appropriate {header} policy for the application.",
+                    references=["https://owasp.org/www-project-secure-headers/"],
                     scanner="headers",
                 )
             )
