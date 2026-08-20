@@ -29,8 +29,14 @@ def check_cors(url: str, config: ScanConfig | None = None) -> list[Finding]:
                 description="The response permits all origins while also enabling credentials.",
                 target=url,
                 confidence="high",
-                evidence="Access-Control-Allow-Origin: *; Access-Control-Allow-Credentials: true",
-                remediation="Restrict allowed origins to trusted origins and only enable credentials when required.",
+                evidence=(
+                    "Access-Control-Allow-Origin: *; "
+                    "Access-Control-Allow-Credentials: true"
+                ),
+                remediation=(
+                    "Restrict allowed origins to trusted origins and only enable "
+                    "credentials when required."
+                ),
                 scanner="cors",
             )
         )
@@ -45,7 +51,10 @@ def check_cors(url: str, config: ScanConfig | None = None) -> list[Finding]:
                 target=url,
                 confidence="high",
                 evidence="Access-Control-Allow-Origin: *",
-                remediation="Use an explicit allowlist when the application does not need to be publicly embeddable.",
+                remediation=(
+                    "Use an explicit allowlist when the application does not need "
+                    "to be publicly embeddable."
+                ),
                 scanner="cors",
             )
         )
