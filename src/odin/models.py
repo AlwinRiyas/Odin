@@ -20,3 +20,20 @@ class Finding:
     references: list[str] = field(default_factory=list)
     scanner: str = "unknown"
     metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        """Serialize the finding for reporters and integrations."""
+        return {
+            "id": self.id,
+            "title": self.title,
+            "severity": self.severity,
+            "category": self.category,
+            "description": self.description,
+            "target": self.target,
+            "confidence": self.confidence,
+            "evidence": self.evidence,
+            "remediation": self.remediation,
+            "references": list(self.references),
+            "scanner": self.scanner,
+            "metadata": dict(self.metadata),
+        }
