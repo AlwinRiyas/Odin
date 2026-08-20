@@ -23,6 +23,13 @@ class ScanResult:
     def finding_count(self) -> int:
         return len(self.findings)
 
+    @property
+    def severity_counts(self) -> dict[str, int]:
+        counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0}
+        for finding in self.findings:
+            counts[finding.severity] += 1
+        return counts
+
     def to_dict(self) -> dict[str, object]:
         """Serialize the complete scan result."""
         return {
@@ -30,6 +37,7 @@ class ScanResult:
             "status": self.status,
             "final_url": self.final_url,
             "finding_count": self.finding_count,
+            "severity_counts": self.severity_counts,
             "findings": [finding.to_dict() for finding in self.findings],
         }
 
