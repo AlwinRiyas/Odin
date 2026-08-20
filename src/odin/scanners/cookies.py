@@ -33,7 +33,10 @@ def check_cookies(url: str, config: ScanConfig | None = None) -> list[Finding]:
                     target=url,
                     confidence="high",
                     evidence=raw_cookie,
-                    remediation="Set the Secure attribute for cookies that must only travel over HTTPS.",
+                    remediation=(
+                        "Set the Secure attribute for cookies that must only travel "
+                        "over HTTPS."
+                    ),
                     scanner="cookies",
                 )
             )
@@ -45,7 +48,10 @@ def check_cookies(url: str, config: ScanConfig | None = None) -> list[Finding]:
                     title=f"Cookie '{name}' missing HttpOnly attribute",
                     severity="medium",
                     category="cookie-security",
-                    description="The cookie does not declare HttpOnly, allowing client-side scripts to access it.",
+                    description=(
+                        "The cookie does not declare HttpOnly, allowing client-side "
+                        "scripts to access it."
+                    ),
                     target=url,
                     confidence="high",
                     evidence=raw_cookie,
@@ -65,7 +71,10 @@ def check_cookies(url: str, config: ScanConfig | None = None) -> list[Finding]:
                     target=url,
                     confidence="medium",
                     evidence=raw_cookie,
-                    remediation="Set an appropriate SameSite policy based on the application's cross-site requirements.",
+                    remediation=(
+                        "Set an appropriate SameSite policy based on the application's "
+                        "cross-site requirements."
+                    ),
                     scanner="cookies",
                 )
             )
