@@ -27,7 +27,11 @@ def _with_marker(url: str) -> str:
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
 
 
-def check_reflection(url: str, config: ScanConfig | None = None, policy: ActiveScanPolicy | None = None) -> list[Finding]:
+def check_reflection(
+    url: str,
+    config: ScanConfig | None = None,
+    policy: ActiveScanPolicy | None = None,
+) -> list[Finding]:
     """Look for a benign marker reflected into an HTML response."""
     config = config or ScanConfig()
     policy = policy or ActiveScanPolicy()
@@ -54,11 +58,17 @@ def check_reflection(url: str, config: ScanConfig | None = None, policy: ActiveS
             title="User-controlled query marker reflected in response",
             severity="medium",
             category="xss",
-            description="A benign marker inserted into a query parameter was reflected in the response body. Reflection alone does not prove executable XSS.",
+            description=(
+                "A benign marker inserted into a query parameter was reflected in "
+                "the response body. Reflection alone does not prove executable XSS."
+            ),
             target=url,
             confidence="low",
             evidence=f"Marker '{MARKER}' was found in the response body.",
-            remediation="Contextually encode untrusted output and apply an appropriate Content Security Policy.",
+            remediation=(
+                "Contextually encode untrusted output and apply an appropriate "
+                "Content Security Policy."
+            ),
             scanner="active_xss",
         )
     ]
