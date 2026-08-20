@@ -5,33 +5,51 @@ from rich import print
 
 from odin import __version__
 from odin.config import ScanConfig
-from odin.scanners.basic import check_status
-from odin.scanners.headers import check_headers
+from odin.engine import available_profiles, available_scanners, run_scan
+from odin.exceptions import TargetError
+from odin.reporters.json import serialize
+from odin.reporters.terminal import render
 
-app = typer.Typer(help="Modular web security scanning CLI.")
+app = typer.Typer(help="Modular web security scanning CLI.", no_args_is_help=True)
 
 
 @app.command()
 def scan(
     url: str = typer.Argument(..., help="Target URL to scan."),
+    profile: str = typer.Option("baseline", help="Scan profile."),
+    modules: str | None = typer.Option(None, help="Comma-separated scanner modules."),
+    output: str = typer.Option("terminal", help="Output format: terminal or json."),
     timeout: float = typer.Option(10.0, min=1.0, help="HTTP timeout in seconds."),
 ) -> None:
-    """Run the current baseline security checks against a target."""
+    """Run security checks against a target."""
+    selected_modules = [item.strip() for item in modules.split(",") if item.strip()] if modules else None
     config = ScanConfig(timeout=timeout)
-    print(f"[bold]Odin[/bold] {__version__}")
-    print(f"Target: {url}")
 
-    basic = check_status(url, config)
-    print(f"HTTP: {basic['status']}  Final URL: {basic['final_url']}")
+    try:
+        result = run_scan(url, config=config, profile=profile, modules=selected_modules)
+    except (TargetError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
 
-    findings = check_headers(url, config)
-    if not findings:
-        print("[green]No missing baseline security headers detected.[/green]")
-        return
+    if output == "json":
+        print(serialize(result))
+    elif output == "terminal":
+        render(result)
+    else:
+        raise typer.BadParameter("Output must be 'terminal' or 'json'.")
 
-    print(f"Findings: {len(findings)}")
-    for finding in findings:
-        print(f"- [{finding.severity.upper()}] {finding.title}")
+
+@app.command()
+def modules() -> None:
+    """List available scanner modules."""
+    for name in available_scanners():
+        print(name)
+
+
+@app.command()
+def profiles() -> None:
+    """List available scan profiles."""
+    for name in available_profiles():
+        print(name)
 
 
 @app.command()

@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "odin-security"
-version = "0.2.0"
-description = "A modular Python web security scanning CLI."
+version = "0.3.0"
+description = "A modular web security scanning CLI."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
