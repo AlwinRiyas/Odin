@@ -30,11 +30,16 @@ def check_methods(url: str, config: ScanConfig | None = None) -> list[Finding]:
                     title=f"HTTP method {method} accepted",
                     severity=severity,
                     category="http-methods",
-                    description="The target accepted a potentially unnecessary HTTP method.",
+                    description=(
+                        "The target accepted a potentially unnecessary HTTP method."
+                    ),
                     target=url,
                     confidence="medium",
                     evidence=f"{method} returned HTTP {response.status_code}.",
-                    remediation="Disable HTTP methods that are not required by the application or infrastructure.",
+                    remediation=(
+                        "Disable HTTP methods that are not required by the application "
+                        "or infrastructure."
+                    ),
                     scanner="methods",
                 )
             )
