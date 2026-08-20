@@ -1,9 +1,8 @@
 """File-backed configuration for repeatable scans."""
 
+import json
 from dataclasses import dataclass, field
 from pathlib import Path
-
-import json
 
 from odin.active import ActiveScanPolicy
 from odin.config import ScanConfig
@@ -34,11 +33,7 @@ def _number(value: object, name: str, minimum: float) -> float:
 
 
 def load_config(path: Path) -> ProjectConfig:
-    """Load a JSON configuration file.
-
-    JSON is used deliberately to avoid introducing another runtime dependency
-    solely for configuration parsing. The file may use an .odin.json suffix.
-    """
+    """Load a JSON configuration file."""
     if not path.exists():
         raise ValueError(f"Configuration file not found: {path}")
     try:
@@ -58,12 +53,13 @@ def load_config(path: Path) -> ProjectConfig:
         timeout=_number(scan_raw.get("timeout", 10), "scan.timeout", 1),
         retries=int(_number(scan_raw.get("retries", 1), "scan.retries", 0)),
         verify_tls=_boolean(scan_raw.get("verify_tls", True), "scan.verify_tls"),
-        user_agent=str(scan_raw.get("user_agent", "odin-security/0.8.0")),
+        user_agent=str(scan_raw.get("user_agent", "odin-security/0.9.0")),
     )
 
     modules = raw.get("modules")
     if modules is not None and (
-        not isinstance(modules, list) or not all(isinstance(item, str) and item.strip() for item in modules)
+        not isinstance(modules, list)
+        or not all(isinstance(item, str) and item.strip() for item in modules)
     ):
         raise ValueError("modules must be a list of non-empty strings")
 
