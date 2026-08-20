@@ -47,12 +47,9 @@ def test_run_scan_normalizes_findings() -> None:
     )
 
     with patch("odin.engine.check_status", return_value=status), patch(
-        "odin.engine.SCANNNERS", create=True
-    ):
-        with patch("odin.engine.SCANNERS", {"test": lambda target, config: [low, high, high]}), patch(
-            "odin.engine.PROFILES", {"test": ["test"]}
-        ):
-            result = run_scan("https://example.com", ScanConfig(), profile="test")
+        "odin.engine.SCANNERS", {"test": lambda target, config: [low, high, high]}
+    ), patch("odin.engine.PROFILES", {"test": ["test"]}):
+        result = run_scan("https://example.com", ScanConfig(), profile="test")
 
     assert [finding.id for finding in result.findings] == ["HIGH-001", "LOW-001"]
     assert result.severity_counts["high"] == 1
