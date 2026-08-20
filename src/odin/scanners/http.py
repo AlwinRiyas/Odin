@@ -32,7 +32,10 @@ def check_http(url: str, config: ScanConfig | None = None) -> list[Finding]:
                 target=url,
                 confidence="high",
                 evidence=f"Initial scheme: {parsed.scheme}",
-                remediation="Use HTTPS for sensitive application traffic and redirect HTTP to HTTPS.",
+                remediation=(
+                    "Use HTTPS for sensitive application traffic and redirect HTTP "
+                    "to HTTPS."
+                ),
                 scanner="http",
             )
         )
@@ -45,7 +48,10 @@ def check_http(url: str, config: ScanConfig | None = None) -> list[Finding]:
                 title="Server header discloses implementation details",
                 severity="low",
                 category="information-disclosure",
-                description="The response exposes a Server header that may reveal server technology.",
+                description=(
+                    "The response exposes a Server header that may reveal server "
+                    "technology."
+                ),
                 target=url,
                 confidence="high",
                 evidence=f"Server: {server}",
