@@ -36,11 +36,17 @@ def check_tls(url: str, config: ScanConfig | None = None) -> list[Finding]:
                 title="TLS connection could not be validated",
                 severity="high" if config.verify_tls else "medium",
                 category="tls",
-                description="The TLS certificate or connection could not be validated with the configured policy.",
+                description=(
+                    "The TLS certificate or connection could not be validated with "
+                    "the configured policy."
+                ),
                 target=url,
                 confidence="high",
                 evidence=str(exc),
-                remediation="Use a valid certificate matching the hostname and a trusted certificate chain.",
+                remediation=(
+                    "Use a valid certificate matching the hostname and a trusted "
+                    "certificate chain."
+                ),
                 scanner="tls",
             )
         ]
@@ -48,7 +54,9 @@ def check_tls(url: str, config: ScanConfig | None = None) -> list[Finding]:
     findings: list[Finding] = []
     not_after = certificate.get("notAfter")
     if not_after:
-        expires = datetime.strptime(not_after, "%b %d %H:%M:%S %Y %Z").replace(tzinfo=timezone.utc)
+        expires = datetime.strptime(
+            not_after, "%b %d %H:%M:%S %Y %Z"
+        ).replace(tzinfo=timezone.utc)
         remaining_days = (expires - datetime.now(timezone.utc)).days
         if remaining_days < 0:
             findings.append(
@@ -72,7 +80,9 @@ def check_tls(url: str, config: ScanConfig | None = None) -> list[Finding]:
                     title="TLS certificate expires soon",
                     severity="low",
                     category="tls",
-                    description="The certificate has 30 or fewer days remaining before expiration.",
+                    description=(
+                        "The certificate has 30 or fewer days remaining before expiration."
+                    ),
                     target=url,
                     confidence="high",
                     evidence=f"Days remaining: {remaining_days}",
