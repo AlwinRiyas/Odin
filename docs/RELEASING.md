@@ -1,21 +1,25 @@
 # Release Process
 
-## 1. Prepare the release
+## Release candidate checklist
 
-1. Update the version in `src/odin/__init__.py` and `pyproject.toml`.
-2. Update the README and release notes.
-3. Run the test suite and lint locally.
-4. Build the package and validate the distributions.
+Before tagging a release, verify:
 
-```bash
-python -m pip install --upgrade build twine
-pytest
-ruff check .
-python -m build
-python -m twine check dist/*
-```
+- [ ] Version is identical in `src/odin/__init__.py` and `pyproject.toml`.
+- [ ] `pytest -q` passes.
+- [ ] `ruff check .` passes.
+- [ ] `python -m build` succeeds.
+- [ ] `python -m twine check dist/*` succeeds.
+- [ ] Wheel installs in a clean virtual environment.
+- [ ] `odin version` reports the expected version.
+- [ ] `odin --help` works after installation.
+- [ ] JSON, HTML, and SARIF reporters produce valid output.
+- [ ] README installation commands match the package metadata.
+- [ ] LICENSE is present.
+- [ ] No secrets or local environment files are included in the distribution.
 
-## 2. TestPyPI
+The CI workflow now performs linting, tests, package building, and Twine validation across supported Python versions.
+
+## TestPyPI
 
 Configure PyPI Trusted Publishing for this GitHub repository and the `publish-testpypi.yml` workflow. The workflow is manual (`workflow_dispatch`).
 
@@ -27,9 +31,9 @@ odin version
 odin --help
 ```
 
-## 3. GitHub release
+## GitHub release
 
-Create and push a version tag:
+Create and push a version tag only after the release candidate checklist passes:
 
 ```bash
 git tag v0.9.0
@@ -38,13 +42,13 @@ git push origin v0.9.0
 
 The tag-driven release workflow builds the wheel and source distribution, validates them with Twine, and creates a GitHub Release with the artifacts attached.
 
-## 4. PyPI publication
+## PyPI publication
 
 Configure PyPI Trusted Publishing for `.github/workflows/publish.yml`.
 
 Publishing is triggered only when a GitHub Release is published. Do not store a long-lived PyPI API token in the repository.
 
-## 5. Post-release verification
+## Post-release verification
 
 From a clean environment:
 
