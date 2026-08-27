@@ -2,7 +2,7 @@
 
 A modular Python security-scanning CLI for authorized defensive web security assessment.
 
-## 0.9.0
+## Current release line
 
 Odin provides a maintainable scanning engine with configurable scan profiles, passive security checks, controlled active checks, risk scoring, and machine-readable reporting.
 
@@ -160,10 +160,10 @@ Release and maintenance procedures are documented in `docs/RELEASING.md`. Versio
 
 - [x] Professional package foundation
 - [x] CLI and scan engine
-- [x] Passive scanner modules
+- [x] Expanded passive scanner modules
 - [x] Controlled active checks
-- [x] Risk and severity engine
-- [x] Terminal, JSON, HTML, and SARIF reporting
+- [x] Risk/severity engine
+- [x] Terminal/JSON/HTML/SARIF reporting
 - [x] Configuration files and scan profiles
 - [x] CI quality gates
 - [ ] PyPI/TestPyPI publication
