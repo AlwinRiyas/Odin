@@ -2,13 +2,11 @@
 
 A modular Python security-scanning CLI for authorized defensive web security assessment.
 
-## Current release line
+## 1.0.0 — Stable
 
 Odin provides a maintainable scanning engine with configurable scan profiles, passive security checks, controlled active checks, risk scoring, and machine-readable reporting.
 
 ## Installation
-
-For a published installation:
 
 ```bash
 pip install odin-security
@@ -78,7 +76,7 @@ Use `odin.example.json` as a starting point for project-specific configuration:
 odin scan https://example.com --config odin.example.json
 ```
 
-Configuration can define the scan settings, profile, selected modules, output format, risk threshold, and active-scan policy.
+Configuration can define scan settings, profile, selected modules, output format, risk threshold, and active-scan policy.
 
 ## Architecture
 
@@ -103,6 +101,7 @@ Terminal / JSON / HTML / SARIF
 ```text
 src/odin/
 ├── cli.py
+├── ui.py
 ├── engine.py
 ├── active.py
 ├── findings.py
@@ -122,7 +121,7 @@ Install the project and development tools:
 
 ```bash
 pip install -e .
-pip install pytest ruff
+pip install pytest ruff build twine
 ```
 
 Run the quality checks:
@@ -132,10 +131,9 @@ python -m pytest -q
 python -m ruff check .
 ```
 
-Build the distributable package:
+Build and validate the distributable package:
 
 ```bash
-python -m pip install --upgrade build
 python -m build
 python -m twine check dist/*
 ```
@@ -144,7 +142,7 @@ python -m twine check dist/*
 
 - Distribution: `odin-security`
 - CLI command: `odin`
-- Current version: `0.9.0`
+- Current version: `1.0.0`
 - License: MIT
 - Supported Python: 3.10+
 
@@ -156,7 +154,7 @@ Odin is intended for authorized defensive security assessment. Do not use it to 
 
 Release and maintenance procedures are documented in `docs/RELEASING.md`. Version-readiness information is available in `docs/V1_READINESS.md`.
 
-## Roadmap
+## Release status
 
 - [x] Professional package foundation
 - [x] CLI and scan engine
@@ -166,5 +164,8 @@ Release and maintenance procedures are documented in `docs/RELEASING.md`. Versio
 - [x] Terminal/JSON/HTML/SARIF reporting
 - [x] Configuration files and scan profiles
 - [x] CI quality gates
-- [ ] PyPI/TestPyPI publication
-- [ ] Long-term release and maintenance process
+- [x] Package build and distribution validation
+- [x] 1.0.0 stable release contract
+- [ ] PyPI publication verification
+
+Odin follows semantic versioning after 1.0.0. Breaking CLI or configuration changes require a major release; backward-compatible capabilities use minor releases; fixes use patch releases.
