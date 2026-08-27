@@ -1,23 +1,23 @@
 # Release Process
 
-## Release candidate checklist
+## Stable release checklist
 
 Before tagging a release, verify:
 
-- [ ] Version is identical in `src/odin/__init__.py` and `pyproject.toml`.
-- [ ] `pytest -q` passes.
-- [ ] `ruff check .` passes.
-- [ ] `python -m build` succeeds.
-- [ ] `python -m twine check dist/*` succeeds.
-- [ ] Wheel installs in a clean virtual environment.
-- [ ] `odin version` reports the expected version.
-- [ ] `odin --help` works after installation.
-- [ ] JSON, HTML, and SARIF reporters produce valid output.
-- [ ] README installation commands match the package metadata.
-- [ ] LICENSE is present.
-- [ ] No secrets or local environment files are included in the distribution.
+- [x] Version is identical in `src/odin/__init__.py` and `pyproject.toml`.
+- [x] `pytest -q` passes.
+- [x] `ruff check .` passes.
+- [x] `python -m build` succeeds.
+- [x] `python -m twine check dist/*` succeeds.
+- [x] Wheel installs in a clean virtual environment.
+- [x] `odin version` reports the expected version.
+- [x] `odin --help` works after installation.
+- [x] JSON, HTML, and SARIF reporters produce valid output.
+- [x] README installation commands match the package metadata.
+- [x] LICENSE is present.
+- [x] No secrets or local environment files are included in the distribution.
 
-The CI workflow now performs linting, tests, package building, and Twine validation across supported Python versions.
+CI performs linting, tests, package building, and distribution validation across supported Python versions.
 
 ## TestPyPI
 
@@ -33,11 +33,11 @@ odin --help
 
 ## GitHub release
 
-Create and push a version tag only after the release candidate checklist passes:
+Create and push the release tag only after the stable release checklist passes:
 
 ```bash
-git tag v0.9.0
-git push origin v0.9.0
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
 The tag-driven release workflow builds the wheel and source distribution, validates them with Twine, and creates a GitHub Release with the artifacts attached.
@@ -59,9 +59,14 @@ python -m pip install --upgrade pip
 python -m pip install odin-security
 odin version
 odin --help
+odin scan https://example.com
 ```
 
 Verify that the installed version matches the GitHub release and that the CLI entry point works.
+
+## Versioning policy
+
+After 1.0.0, breaking CLI or configuration changes require a major version. New backward-compatible capabilities use minor releases. Bug fixes and security fixes use patch releases.
 
 ## Important
 
