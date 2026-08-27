@@ -4,7 +4,18 @@ All notable changes to this project are documented here.
 
 ## [Unreleased]
 
-- Continue release-candidate hardening and compatibility testing.
+- Future changes will follow semantic versioning and the stable release policy.
+
+## [1.0.0]
+
+- Declared the public CLI and package contract stable.
+- Finalized the modular scan engine and configurable profiles.
+- Finalized passive security checks and explicitly controlled active checks.
+- Finalized risk scoring and severity normalization.
+- Finalized terminal, JSON, HTML, and SARIF reporting.
+- Finalized project configuration and validation.
+- Finalized CI quality gates and package distribution validation.
+- Added stable release documentation and maintenance guidance.
 
 ## [0.9.0]
 

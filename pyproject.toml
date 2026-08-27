@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "odin-security"
-version = "0.9.0"
+version = "1.0.0"
 description = "A modular Python security-scanning CLI for authorized defensive security assessment."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,7 +12,7 @@ license = { text = "MIT" }
 authors = [{ name = "Alwin Riyas P" }]
 keywords = ["security", "scanner", "cybersecurity", "cli", "web-security"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
