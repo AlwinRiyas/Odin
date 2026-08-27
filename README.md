@@ -1,124 +1,84 @@
 # Odin
 
-A modular Python security-scanning CLI for authorized defensive security assessment.
+A modular Python security-scanning CLI for authorized defensive web security assessment.
 
 ## 0.9.0
 
-Odin 0.9.0 provides a maintainable CLI, configurable scan profiles, passive security scanners, controlled active checks, risk scoring, and machine-readable reporting.
+Odin provides a maintainable scanning engine with configurable scan profiles, passive security checks, controlled active checks, risk scoring, and machine-readable reporting.
 
 ## Installation
 
-### From source
+For a published installation:
+
+```bash
+pip install odin-security
+```
+
+For local development:
 
 ```bash
 python -m venv .venv
-```
-
-Windows:
-
-```powershell
-.venv\Scripts\activate
+.venv\Scripts\activate  # Windows
 pip install -e .
 ```
-
-Build a distributable package:
-
-```bash
-python -m pip install --upgrade build
-python -m build
-```
-
-The wheel and source distribution are written to `dist/`.
-
-### Package name
-
-The distribution name is `odin-security` and the installed CLI command is `odin`.
 
 ## Quick start
 
 ```bash
 odin --help
 odin version
+odin modules
+odin profiles
 odin scan https://example.com
 ```
 
-Odin displays scan progress, HTTP status, final URL, duration, finding counts, risk score, severity counts, and normalized findings in the terminal.
-
-Example command output:
-
-```text
-Scanner Progress
-✓ DONE    http
-✓ DONE    headers
-✓ DONE    cookies
-✓ DONE    cors
-✓ DONE    disclosure
-
-Scan Summary
-HTTP Status   200
-Findings      7
-Risk          3.21/10  MEDIUM
-```
-
-## CLI commands
-
-```bash
-odin scan <URL>
-odin modules
-odin profiles
-odin version
-```
-
-### Scan options
-
-```bash
-odin scan https://example.com --profile quick
-odin scan https://example.com --modules headers,tls
-odin scan https://example.com --output json
-odin scan https://example.com --output html --output-file report.html
-odin scan https://example.com --output sarif --output-file results.sarif
-odin scan https://example.com --fail-on high
-odin scan https://example.com --config odin.example.json
-```
-
-Supported terminal report formats are:
-
-- `terminal` — human-readable Rich CLI output
-- `json` — structured scan results
-- `html` — standalone report
-- `sarif` — SARIF 2.1.0 security-results format
+Only scan systems that you own or have explicit permission to test.
 
 ## Scan profiles
 
-```text
-quick
-baseline
-full
+- `quick` — lightweight HTTP and security-header checks
+- `baseline` — standard passive security assessment
+- `full` — expanded passive assessment including TLS and HTTP-method checks
+
+Example:
+
+```bash
+odin scan https://example.com --profile full
 ```
 
-Profiles select groups of scanner modules. Individual modules can also be selected explicitly with `--modules`.
+Individual modules can also be selected:
 
-## Scanner modules
-
-The passive scanner registry currently includes:
-
-```text
-cookies
-cors
-disclosure
-headers
-http
-methods
-tls
+```bash
+odin scan https://example.com --modules headers,tls
 ```
 
-Controlled active modules are available only through explicit active-scan policy configuration and are disabled by default.
+Active modules require an explicitly enabled active-scan policy and are intentionally bounded.
+
+## Reporting
+
+Terminal output is the default. Odin also supports JSON, HTML, and SARIF reports:
+
+```bash
+odin scan https://example.com --output json --output-file results.json
+odin scan https://example.com --output html --output-file report.html
+odin scan https://example.com --output sarif --output-file results.sarif
+```
+
+Risk thresholds can be used for automation and CI workflows:
+
+```bash
+odin scan https://example.com --fail-on high
+```
 
 ## Configuration
 
-Copy `odin.example.json` to a project configuration file and adjust the settings for your authorized assessment environment.
+Use `odin.example.json` as a starting point for project-specific configuration:
 
-Active scanning requires an explicitly enabled policy and is bounded by a request budget. Do not enable active checks against systems without authorization.
+```bash
+odin scan https://example.com --config odin.example.json
+```
+
+Configuration can define the scan settings, profile, selected modules, output format, risk threshold, and active-scan policy.
 
 ## Architecture
 
@@ -138,40 +98,65 @@ Risk Engine
 Terminal / JSON / HTML / SARIF
 ```
 
+## Project structure
+
+```text
+src/odin/
+├── cli.py
+├── engine.py
+├── active.py
+├── findings.py
+├── models.py
+├── risk.py
+├── settings.py
+├── scanners/
+└── reporters/
+
+tests/
+docs/
+```
+
 ## Development
 
-Install the project in editable mode and run the quality checks:
+Install the project and development tools:
 
 ```bash
 pip install -e .
+pip install pytest ruff
+```
+
+Run the quality checks:
+
+```bash
 python -m pytest -q
 python -m ruff check .
 ```
 
-The current test suite contains 35 tests.
-
-## Packaging checks
-
-Before publishing a release, build and validate the distributions:
+Build the distributable package:
 
 ```bash
+python -m pip install --upgrade build
 python -m build
 python -m twine check dist/*
 ```
 
-For a clean installation test, install the built wheel in a fresh virtual environment and verify:
+## Package information
 
-```bash
-python -c "import odin; print(odin.__version__)"
-odin --help
-odin version
-```
+- Distribution: `odin-security`
+- CLI command: `odin`
+- Current version: `0.9.0`
+- License: MIT
+- Supported Python: 3.10+
 
-## Responsible use
+## Security and responsible use
 
-Only scan systems you own or have explicit permission to test. Odin is intended for authorized defensive security assessment.
+Odin is intended for authorized defensive security assessment. Do not use it to scan systems without permission. Active checks are disabled by default and subject to an explicit request budget.
 
-## Project status
+## Documentation
+
+Release and maintenance procedures are documented in `docs/RELEASING.md`. Version-readiness information is available in `docs/V1_READINESS.md`.
+
+## Roadmap
 
 - [x] Professional package foundation
 - [x] CLI and scan engine
@@ -181,10 +166,5 @@ Only scan systems you own or have explicit permission to test. Odin is intended 
 - [x] Terminal, JSON, HTML, and SARIF reporting
 - [x] Configuration files and scan profiles
 - [x] CI quality gates
-- [x] Package build and release validation
 - [ ] PyPI/TestPyPI publication
 - [ ] Long-term release and maintenance process
-
-## License
-
-MIT License. See `LICENSE` for details.
